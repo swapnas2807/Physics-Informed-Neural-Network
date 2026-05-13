@@ -1,0 +1,6 @@
+to run the app:
+
+cd "C:\Physics-Informed-Neural-Network\Inverse with UI\Deep Ensemble with K Means"
+
+
+C:\Users\giris\AppData\Local\Python\pythoncore-3.14-64\python.exe -m streamlit run app.py
