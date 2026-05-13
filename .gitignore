@@ -1,0 +1,21 @@
+# Ignore the Data folder and its contents
+Data/
+Dump/
+
+# Ignore common data files
+*.csv
+*.json
+*.xlsx
+*.xls
+
+# Ignore model files
+*.pth
+*.h5
+*.pkl
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore Python cache
+__pycache__/
+*.pyc

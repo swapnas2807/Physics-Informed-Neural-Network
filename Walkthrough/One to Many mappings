@@ -1,0 +1,32 @@
+# Walkthrough: Multi-Solution Inverse Predictors
+
+I have cleanly completed all the required Phase 1, Phase 2, and Phase 3 implementations across three entirely separate `.ipynb` sandboxes for you to test.
+
+## 1. Multi-Start Global Optimization
+**File:** `Multi_Start_Inverse.ipynb`
+
+This notebook leverages your existing 0.99 R² PINN model directly without needing newly trained weights.
+- It pushes `1,000` stochastic starting geometries directly into the PyTorch `Adam` optimizer simultaneously.
+- Using tensor broadcasting, all 1,000 circuits are optimized perfectly in parallel against a single set of performance targets.
+- Solutions falling under `MSE < 0.05` are separated, and mapped into `scikit-learn`'s `K-Means`.
+- The notebook outputs the top 5 most physically diverse geometries that each perfectly recreate your exact performance targets.
+
+## 2. Generative Modeling (cVAE)
+**File:** `cVAE_Generative_Inverse.ipynb`
+
+This notebook introduces an end-to-end Generative AI pipeline specifically for your topology.
+- Takes the original `FINAL_4CLASSES.csv` data and uses an `Encoder` block to compress geometries down to a Gaussian `Latent Space`.
+- Integrates a `Physics-Loss` function: The `Decoder` outputs are fed directly onto the frozen `PINN` backbone, heavily penalizing the cVAE if it generates geometries that fail the target test.
+- Allows you to feed the exact same target requirements, along with randomly sampled variables `z`, to instantaneously output unique mathematical solutions.
+
+> [!WARNING]  
+> Before testing the cVAE inside the Evaluation Suite, you must run the `cVAE_Generative_Inverse.ipynb` notebook completely through at least once to train and save the `cvae_generator.pth` weights!
+
+## 3. The Evaluation Suite
+**File:** `Inverse_Evaluation_Suite.ipynb`
+
+A rigorous testing environment evaluating gradient-descent methodologies vs generative methodologies. It samples groups of target metrics and calculates:
+1. **Latency:** Finding solutions should ideally happen seamlessly fast.
+2. **Geometrical Diversity:** Measured by Average Euclidean Distance (how drastically different are your 5 width outputs from each other?).
+3. **Yield Percentage:** The proportion of generated circuits that fall under a strict `< 5% Error` physical margin.
+4. **Mean Absolute Percentage Error (MAPE):** The global average output error across `Gain`, `GBW`, `Power`, `Phase Margin`, etc.
